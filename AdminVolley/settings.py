@@ -37,13 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'usuarios',
-    'deportes',
-    'clubes',
-    'atletas',
-    'membresias',
-    'calendario',
-    'notificaciones',
 ]
 
 MIDDLEWARE = [
