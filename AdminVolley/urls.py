@@ -28,7 +28,8 @@ urlpatterns = [
     path('membresias/', include('membresias.urls')),
     path('notificaciones/', include('notificaciones.urls')),
     path('usuarios/', include('usuarios.urls')),
-        
+    path('loggin/', include('loggin.urls')),  # Autenticación de DRF
+
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
 
     # Documentación con Swagger UI

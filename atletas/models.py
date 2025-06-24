@@ -8,7 +8,7 @@ class Atleta(models.Model):
     apellido = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     foto_perfil = models.ImageField(upload_to='fotos_perfil/', null=True, blank=True)
-    #password = models.CharField(max_length=128)
+    password = models.CharField(max_length=128)
     fecha_nacimiento = models.DateField()
     telefono = models.CharField(max_length=20)
     descripcion = models.TextField(null=True, blank=True)
