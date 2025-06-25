@@ -2,6 +2,7 @@
 from django.db import models
 from usuarios.models import Usuario
 from deportes.models import Deporte
+from atletas.models import Atleta
 
 class Club(models.Model):
     nombre = models.CharField(max_length=200)
@@ -29,3 +30,27 @@ class AdministradorClub(models.Model):
 
     def __str__(self):
         return f"{self.nombre_completo} ({self.club.nombre})"
+    
+
+
+class ClubAtleta(models.Model):
+    atleta = models.ForeignKey(Atleta,on_delete=models.CASCADE,related_name='inscripciones_atletas')
+    club = models.ForeignKey(Club,on_delete=models.CASCADE, related_name='clubes_disponibles')
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    activo = models.BooleanField(default=True)
+    fecha_baja = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['atleta'],
+                condition=models.Q(activo=True),
+                name='unique_atleta_activo'
+            )
+        ]
+
+    def save(self, *args, **kwargs):
+        if self.activo:
+            # Desactivar cualquier otra membresía activa
+            ClubAtleta.objects.filter(atleta=self.atleta, activo=True).update(activo=False)
+        super().save(*args, **kwargs)

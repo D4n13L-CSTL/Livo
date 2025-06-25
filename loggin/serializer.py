@@ -19,6 +19,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 deporte_rel = AtletaDeporte.objects.get(atleta=atleta)
                 data['deporte'] = deporte_rel.deporte.nombre
                 data['nivel_habilidad'] = deporte_rel.nivel_habilidad
+                data['deporte_id'] = deporte_rel.deporte.id
+                data['id'] = atleta.id
             except Exception:
                 data['deporte'] = None
                 data['nivel_habilidad'] = None

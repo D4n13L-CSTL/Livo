@@ -3,6 +3,7 @@ from .models import Atleta, AtletaDeporte
 from deportes.models import Deporte
 from django.contrib.auth import get_user_model
 from .asignacion_de_categoria import determinar_categoria
+from clubes.models import Club, ClubAtleta
 
 
 
@@ -13,6 +14,9 @@ class AtletaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Atleta
         fields = '__all__'
+     
+     
+     
         
 class AtletaDeporteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,7 +24,6 @@ class AtletaDeporteSerializer(serializers.ModelSerializer):
         fields = '__all__'
     
  
-
 
 
 class RegistroAtletaSerializer(serializers.Serializer):
@@ -88,3 +91,55 @@ class RegistroAtletaSerializer(serializers.Serializer):
         )
 
         return usuario
+    
+
+class ClubSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Club
+        fields = '__all__'
+
+
+
+class ClubAtletaSerializer(serializers.Serializer):
+    
+    club = serializers.IntegerField()
+    
+    
+    def validate(self, data):
+        request = self.context.get('request')
+        atleta_id = request.COOKIES.get('id_atleta', None)
+        club_id = data['club']
+
+        # Validar que existan el atleta y el club
+        if not Atleta.objects.filter(id=atleta_id).exists():
+            raise serializers.ValidationError("El atleta no existe.")
+        if not Club.objects.filter(id=club_id).exists():
+            raise serializers.ValidationError("El club no existe.")
+
+        # Validar que no tenga ya una inscripción activa
+        if ClubAtleta.objects.filter(atleta_id=atleta_id, activo=True).exists():
+            raise serializers.ValidationError("El atleta ya está inscrito activamente en otro club.")
+
+        return data
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        atleta_id = request.COOKIES.get('id_atleta', None)
+        atleta = Atleta.objects.get(id=atleta_id)
+        club = Club.objects.get(id=validated_data['club'])
+
+        # Se usa la lógica de `save()` definida en el modelo
+        inscripcion = ClubAtleta.objects.create(
+            atleta=atleta,
+            club=club,
+            activo=True
+        )
+        return inscripcion
+    
+
+class InscripcionesSerializer(serializers.ModelSerializer):
+    nombre_club = serializers.ReadOnlyField(source='club.nombre')
+    nombre_atleta = serializers.ReadOnlyField(source='atleta.nombre')
+    class Meta:
+        model = ClubAtleta
+        fields = ['id', 'fecha_registro', 'activo', 'fecha_baja', 'atleta', 'club', 'nombre_club', 'nombre_atleta']

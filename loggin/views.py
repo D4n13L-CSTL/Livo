@@ -56,6 +56,23 @@ class CustomLoginView(TokenObtainPairView):
         expires=expires
     )
         
+        response.set_cookie(
+        key='id_deporte',
+        value=serializer.validated_data.get('deporte_id', ''),
+        httponly=False,  # Si quieres acceder desde JS
+        secure=True,
+        samesite='Lax',
+        expires=expires
+    )
+        response.set_cookie(
+        key='id_atleta',
+        value=serializer.validated_data.get('id', ''),
+        httponly=True,  # Si quieres acceder desde JS
+        secure=True,
+        samesite='Lax',
+        expires=expires
+    )
+        
 
         return response
     

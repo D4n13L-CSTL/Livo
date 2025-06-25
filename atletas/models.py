@@ -21,6 +21,8 @@ class Atleta(models.Model):
 
 
 
+
+
 class AtletaDeporte(models.Model):
     NIVELES = [
         ('PRINCIPIANTE', 'Principiante'),
