@@ -8,6 +8,6 @@ from .views import CustomLoginView, RefreshTokenFromCookieView
 
 urlpatterns = [
     path('', CustomLoginView.as_view(), name='custom_login'),
-    path('api/token/refresh/', RefreshTokenFromCookieView.as_view(), name='token_refresh_cookie'),
+    path('api/token/refresh/', RefreshTokenFromCookieView.as_view(), name='token_refresh'),
 
 ]

@@ -2,10 +2,11 @@ from rest_framework import serializers
 from .models import Atleta, AtletaDeporte
 from deportes.models import Deporte
 from django.contrib.auth import get_user_model
+from .asignacion_de_categoria import determinar_categoria
+
+
 
 Usuario = get_user_model()
-
-
 
 
 class AtletaSerializer(serializers.ModelSerializer):
@@ -27,21 +28,34 @@ class RegistroAtletaSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
     nombre = serializers.CharField()
     apellido = serializers.CharField()
-    fecha_nacimiento = serializers.DateField()
+    fecha_nacimiento = serializers.DateField(format="%Y-%m-%d", input_formats=["%Y-%m-%d"])
     telefono = serializers.CharField()
     foto = serializers.ImageField(required=False, allow_null=True)
     descripcion = serializers.CharField(required=False, allow_blank=True)
     deporte_id = serializers.IntegerField()
     nivel_habilidad = serializers.ChoiceField(choices=AtletaDeporte.NIVELES)
+    
+
+    def validate_email(self, value):
+        if Usuario.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Este email ya está registrado.")
+        return value
+    
 
     def create(self, validated_data):
         # Extraemos los datos del atleta
+        deporte = Deporte.objects.get(id=validated_data['deporte_id'])
         nombre = validated_data.pop('nombre')
         apellido = validated_data.pop('apellido')
         fecha_nacimiento = validated_data.pop('fecha_nacimiento')
         telefono = validated_data.pop('telefono')
         descripcion = validated_data.pop('descripcion', '')
         foto = validated_data.pop('foto', None)
+        categoria = determinar_categoria(
+            deporte.nombre,
+            fecha_nacimiento
+        )
+
 
         # Creamos el usuario
         usuario = Usuario.objects.create_user(
@@ -61,6 +75,7 @@ class RegistroAtletaSerializer(serializers.Serializer):
             fecha_nacimiento=fecha_nacimiento,
             telefono=telefono,
             descripcion=descripcion,
+            categoria=categoria,  # Asignamos la categoría calculada
             foto_perfil=foto,  # Asignamos la foto si se proporciona
         )
 

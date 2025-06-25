@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from drf_spectacular.utils import extend_schema
-
+from rest_framework.permissions import AllowAny
 
 # Create your views here.
 class AtletaViewSet(viewsets.ModelViewSet):
@@ -19,15 +19,20 @@ class AtletaDeporteViewSet(viewsets.ModelViewSet):
     serializer_class = AtletaDeporteSerializer
 
 
-
-class RegistroAtletaView(APIView):
+class RegistroAtletaView(APIView): #VIEW DE REGISTRAR ATLETA
+    permission_classes = [AllowAny]
     @extend_schema(
         request=RegistroAtletaSerializer,
         responses={201: None}
     )
+    
     def post(self, request):
         serializer = RegistroAtletaSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"mensaje": "Atleta registrado correctamente"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+
