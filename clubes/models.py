@@ -3,9 +3,11 @@ from django.db import models
 from usuarios.models import Usuario
 from deportes.models import Deporte
 from atletas.models import Atleta
+import uuid
 
 class Club(models.Model):
     nombre = models.CharField(max_length=200)
+    serial_club = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     direccion_club = models.TextField()
     logo = models.ImageField(upload_to='clubes/logos/', null=True, blank=True)
     deporte = models.ForeignKey(Deporte, on_delete=models.PROTECT)

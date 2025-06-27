@@ -35,3 +35,17 @@ class RegistroClubView(APIView):
             return Response({"mensaje": "Club registrado correctamente"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+
+
+
+class ClubQueryView(APIView):
+    def get(self, request):
+        serial = request.query_params.get('serial_club')
+        if serial:
+            try:
+                club = Club.objects.get(serial_club=serial)
+                serializer = ClubSerializer(club)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Club.DoesNotExist:
+                return Response({'error': 'Club no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Parámetro serial_club requerido'}, status=status.HTTP_400_BAD_REQUEST)

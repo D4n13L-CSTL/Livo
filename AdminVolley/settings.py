@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'usuarios',
     'rest_framework',
     'rest_framework_simplejwt',
-    'loggin'
+    'loggin',
+    'corsheaders'
 ]
 
 
@@ -62,6 +63,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Debe ir primero
+    'django.middleware.common.CommonMiddleware'
 ]
 
 ROOT_URLCONF = 'AdminVolley.urls'
@@ -168,3 +171,10 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5500",  # tu frontend local
+    "https://livosport.loca.lt",  # tu backend por túnel
+]
+
+CORS_ALLOW_ALL_ORIGINS = True

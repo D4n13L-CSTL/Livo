@@ -75,3 +75,6 @@ class RegistroClubSerializer(serializers.Serializer):
 
     
         return usuario
+    
+
+
