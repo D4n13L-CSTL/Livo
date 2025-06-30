@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Club, AdministradorClub
-from .serializer import ClubSerializer, AdministradorClubSerializer, RegistroClubSerializer
+from .serializer import ClubSerializer, AdministradorClubSerializer, RegistroClubSerializer, VerAtletasRegister
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from drf_spectacular.utils import extend_schema
@@ -38,7 +38,10 @@ class RegistroClubView(APIView):
 
 
 
+
+
 class ClubQueryView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request):
         serial = request.query_params.get('serial_club')
         if serial:
@@ -49,3 +52,10 @@ class ClubQueryView(APIView):
             except Club.DoesNotExist:
                 return Response({'error': 'Club no encontrado'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'error': 'Parámetro serial_club requerido'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    
+class Club_Atletas_register(APIView):
+    def get(self,request):
+        serializer = VerAtletasRegister()
+        return Response (serializer.data, status=status.HTTP_200_OK)

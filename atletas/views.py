@@ -37,6 +37,10 @@ class RegistroAtletaView(APIView): #VIEW DE REGISTRAR ATLETA
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+
+
+
+
 class AtletaxDeporte(APIView):
 
     @extend_schema(
@@ -55,6 +59,11 @@ class AtletaxDeporte(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+
+
+
+
+
 
 class PerfilAtletaView(APIView):
     @extend_schema(

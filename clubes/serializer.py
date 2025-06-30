@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Club, AdministradorClub
+from .models import Club, AdministradorClub, ClubAtleta
 from django.contrib.auth import get_user_model
 from deportes.models import Deporte
 
@@ -77,4 +77,11 @@ class RegistroClubSerializer(serializers.Serializer):
         return usuario
     
 
+
+
+
+class VerAtletasRegister(serializers.ModelSerializer):
+    class Meta:
+        model = ClubAtleta
+        fields = '__all__'
 

@@ -37,7 +37,9 @@ class RegistroAtletaSerializer(serializers.Serializer):
     descripcion = serializers.CharField(required=False, allow_blank=True)
     deporte_id = serializers.IntegerField()
     nivel_habilidad = serializers.ChoiceField(choices=AtletaDeporte.NIVELES)
-    
+    club_id = serializers.IntegerField()
+
+
 
     def validate_email(self, value):
         if Usuario.objects.filter(email=value).exists():
@@ -89,11 +91,21 @@ class RegistroAtletaSerializer(serializers.Serializer):
             deporte=deporte,  # Inicialmente sin deporte asignado
             nivel_habilidad=validated_data['nivel_habilidad'],  # Inicialmente sin nivel de habilidad
         )
+        
+        club = Club.objects.get(id=validated_data['club_id'])
+
+        
+        atleta_inscripcion = ClubAtleta.objects.create(
+            
+            atleta = atleta,
+            club  = club
+            )
 
         return usuario
     
 
 class ClubSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Club
         fields = '__all__'
@@ -103,6 +115,7 @@ class ClubSerializer(serializers.ModelSerializer):
 class ClubAtletaSerializer(serializers.Serializer):
     
     club = serializers.IntegerField()
+    serial_club = serializers.CharField()
     
     
     def validate(self, data):
@@ -136,6 +149,11 @@ class ClubAtletaSerializer(serializers.Serializer):
         )
         return inscripcion
     
+
+
+
+
+
 
 class InscripcionesSerializer(serializers.ModelSerializer):
     nombre_club = serializers.ReadOnlyField(source='club.nombre')

@@ -31,6 +31,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 club = admin_club.club
                 data['deporte'] = club.deporte.nombre
                 data['deporte_id'] = club.deporte.id
+                data['serial_club'] = club.serial_club
+                print(data['serial_club'])
             except Exception:
                 data['deporte'] = None
                 data['deporte_id'] = None
