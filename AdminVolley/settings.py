@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-f=e*)l$h!3la5s$7cs8zf2q_92ww63s&9_$03njdv4#e*c0w5('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True #CAmbiar a False en producción
 
 ALLOWED_HOSTS = ['*']
 
@@ -171,10 +171,11 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+CORS_ALLOW_ALL_ORIGINS = False  # ❌ esto debe estar en False
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5500",  # tu frontend local
+    "http://10.100.39.35:4321",  # tu frontend local
     "https://livosport.loca.lt",  # tu backend por túnel
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True  # ✅ habilitar envío de cookies
