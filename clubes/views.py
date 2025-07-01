@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Club, AdministradorClub
+from .models import Club, AdministradorClub, ClubAtleta
 from .serializer import ClubSerializer, AdministradorClubSerializer, RegistroClubSerializer, VerAtletasRegister
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
@@ -57,5 +57,9 @@ class ClubQueryView(APIView):
     
 class Club_Atletas_register(APIView):
     def get(self,request):
-        serializer = VerAtletasRegister()
+        serial_club_cookie = request.COOKIES.get('serial_club')
+        club_id = Club.objects.get(serial_club = serial_club_cookie)
+        club_id_pritnt = club_id.id
+        club = ClubAtleta.objects.filter(club = club_id_pritnt)
+        serializer = VerAtletasRegister(club, many = True)
         return Response (serializer.data, status=status.HTTP_200_OK)

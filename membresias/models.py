@@ -1,6 +1,6 @@
 # membresias/models.py
 from django.db import models
-from clubes.models import Club
+from clubes.models import Club, ClubAtleta
 
 class MembresiaClub(models.Model):
     PLANES = [
@@ -35,22 +35,18 @@ class PagoMembresia(models.Model):
     def __str__(self):
         return f"Pago de {self.monto} por {self.membresia}"
 
-class AtletaClub(models.Model):
-    atleta = models.ForeignKey('atletas.Atleta', on_delete=models.CASCADE)
-    club = models.ForeignKey('clubes.Club', on_delete=models.CASCADE)
-    fecha_inscripcion = models.DateField(auto_now_add=True)
-    fecha_baja = models.DateField(null=True, blank=True)
-    activo = models.BooleanField(default=True)
-    cuota_mensual = models.DecimalField(max_digits=10, decimal_places=2)
-    
-    class Meta:
-        unique_together = ('atleta', 'club')
-    
-    def __str__(self):
-        return f"{self.atleta} en {self.club}"
+
+
+
+
+
+
+
+
+
 
 class PagoMensualidad(models.Model):
-    atleta_club = models.ForeignKey(AtletaClub, on_delete=models.CASCADE)
+    atleta_club = models.ForeignKey(ClubAtleta, on_delete=models.CASCADE)
     monto = models.DecimalField(max_digits=10, decimal_places=2)
     fecha_pago = models.DateField()
     mes_correspondiente = models.DateField()

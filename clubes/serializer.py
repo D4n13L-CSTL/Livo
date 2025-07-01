@@ -81,7 +81,11 @@ class RegistroClubSerializer(serializers.Serializer):
 
 
 class VerAtletasRegister(serializers.ModelSerializer):
+    
+    nombre_atleta= serializers.ReadOnlyField(source='atleta.nombre')
     class Meta:
         model = ClubAtleta
-        fields = '__all__'
+        fields = ['id','nombre_atleta']
+
+#COMENZANDO SERIALIZADOR PARA DATOS DE ESTUDIANTES DEL CLUB
 

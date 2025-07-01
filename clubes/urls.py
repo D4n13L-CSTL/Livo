@@ -11,5 +11,5 @@ urlpatterns = [
     path('api', include(router_desc.urls)),
     path('api/registro-club/', RegistroClubView.as_view(), name='registro-club'),
      path('clubes/', ClubQueryView.as_view(), name='club-list'),
-     path('atletas', Club_Atletas_register.as_view(), name='club-atletas'),
+     path('atletas/', Club_Atletas_register.as_view(), name='club-atletas'),
 ]
