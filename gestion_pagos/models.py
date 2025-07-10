@@ -22,3 +22,6 @@ class PagoInscripciones(models.Model):
     
     class Meta:
         db_table = 'Pago_Inscripciones'
+
+
+
