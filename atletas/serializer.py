@@ -28,6 +28,7 @@ class AtletaDeporteSerializer(serializers.ModelSerializer):
 
 class RegistroAtletaSerializer(serializers.Serializer):
     email = serializers.EmailField()
+    nombre_user = serializers.CharField()
     password = serializers.CharField(write_only=True)
     nombre = serializers.CharField()
     apellido = serializers.CharField()
@@ -41,10 +42,10 @@ class RegistroAtletaSerializer(serializers.Serializer):
 
 
 
-    def validate_email(self, value):
+    """def validate_email(self, value):
         if Usuario.objects.filter(email=value).exists():
             raise serializers.ValidationError("Este email ya está registrado.")
-        return value
+        return value"""
     
 
     def create(self, validated_data):
@@ -67,7 +68,7 @@ class RegistroAtletaSerializer(serializers.Serializer):
             email=validated_data['email'],
             password=validated_data['password'],
             tipo_usuario='ATLETA',
-            username=validated_data['email'],  # si usas email como username
+            username=validated_data['nombre_user'].upper(),  # si usas email como username
             telefono=telefono
         )
 

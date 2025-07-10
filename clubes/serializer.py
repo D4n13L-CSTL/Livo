@@ -21,6 +21,7 @@ class AdministradorClubSerializer(serializers.ModelSerializer):
 class RegistroClubSerializer(serializers.Serializer):
     nombre_club = serializers.CharField()
     nombre_encargado = serializers.CharField()
+    usuario_club = serializers.CharField()
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
     telefono = serializers.CharField()
@@ -30,10 +31,10 @@ class RegistroClubSerializer(serializers.Serializer):
     direccion_club = serializers.CharField(required=False, allow_blank=True)
     
 
-    def validate_email(self, value):
+    """def validate_email(self, value):
         if Usuario.objects.filter(email=value).exists():
             raise serializers.ValidationError("Este email ya está registrado.")
-        return value
+        return value"""
     
 
     def create(self, validated_data):
@@ -51,7 +52,7 @@ class RegistroClubSerializer(serializers.Serializer):
             email=validated_data['email'],
             password=validated_data['password'],
             tipo_usuario='CLUB',
-            username=validated_data['email'] # si usas email como username
+            username=validated_data['usuario_club'].upper() # si usas email como username
         )
 
         # Creamos el perfil de atleta vinculado

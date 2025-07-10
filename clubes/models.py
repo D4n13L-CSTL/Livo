@@ -41,7 +41,7 @@ class ClubAtleta(models.Model):
     fecha_registro = models.DateTimeField(auto_now_add=True)
     activo = models.BooleanField(default=True)
     fecha_baja = models.DateTimeField(null=True, blank=True)
-    cuota_mensual = models.DecimalField(max_digits=10, decimal_places=2)
+    cuota_mensual = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     
     
     class Meta:

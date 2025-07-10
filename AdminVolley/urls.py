@@ -29,6 +29,7 @@ urlpatterns = [
     path('notificaciones/', include('notificaciones.urls')),
     path('usuarios/', include('usuarios.urls')),
     path('loggin/', include('loggin.urls')),  # Autenticación de DRF
+    path('pagos/', include('gestion_pagos.urls')),  # Autenticación de DRF
 
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
 

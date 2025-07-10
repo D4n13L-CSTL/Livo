@@ -14,6 +14,6 @@ class Usuario(AbstractUser):
     fecha_registro = models.DateTimeField(auto_now_add=True)
     
     
-    email = models.EmailField(unique=True)
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    email = models.EmailField()
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
