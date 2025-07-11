@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'usuarios',
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'loggin',
     'corsheaders',
     'gestion_pagos'
@@ -170,6 +171,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ROTATE_REFRESH_TOKENS': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 CORS_ALLOW_ALL_ORIGINS = False  # ❌ esto debe estar en False

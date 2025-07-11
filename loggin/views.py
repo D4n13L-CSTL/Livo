@@ -7,6 +7,11 @@ from .serializer import CustomTokenObtainPairSerializer  # tu serializador
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework.views import APIView
 from atletas.models import Atleta
+from rest_framework.permissions import IsAuthenticated
+from middleware.jwt_cookie_auth import CustomJWTAuthentication
+
+
+
 
 class CustomLoginView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
@@ -66,7 +71,7 @@ class CustomLoginView(TokenObtainPairView):
     )
         response.set_cookie(
         key='serial_club',
-        value=serializer.validated_data.get('serial_club', ''),
+        value=serializer.validated_data.get('serial_club', 'sinSerial'),
         httponly=True,  # Si quieres acceder desde JS
         secure=True,
         samesite='None',
@@ -108,3 +113,40 @@ class RefreshTokenFromCookieView(APIView):
 
         except TokenError as e:
             return Response({"detail": "Token inválido o expirado."}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        
+        
+    
+
+class LogoutView(APIView):
+    authentication_classes = [CustomJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        response = Response({"detail": "Sesión cerrada correctamente."}, status=status.HTTP_200_OK)
+
+        # Eliminar cookies
+        response.delete_cookie('access_token')
+        response.delete_cookie('refresh_token')
+        response.delete_cookie('deporte')
+        response.delete_cookie('id_deporte')
+        response.delete_cookie('serial_club')
+
+        # Opcional: revocar el refresh token
+        refresh_token = request.COOKIES.get('refresh_token')
+        if refresh_token:
+            try:
+                token = RefreshToken(refresh_token)
+                token.blacklist()  # Necesitás tener configurado el blacklist
+            except Exception:
+                pass  # Si ya está expirado o no es válido, lo ignoramos
+
+        return response
+
+
+class CheckAuthView(APIView):
+    authentication_classes = [CustomJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({'authenticated': True}, status=status.HTTP_200_OK)
