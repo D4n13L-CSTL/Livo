@@ -42,11 +42,15 @@ class RegistroAtletaSerializer(serializers.Serializer):
 
 
 
-    """def validate_email(self, value):
+    def validate_email(self, value):
         if Usuario.objects.filter(email=value).exists():
             raise serializers.ValidationError("Este email ya está registrado.")
-        return value"""
+        return value
     
+    def validate_nombre_user(self, value):
+        if Usuario.objects.filter(username=value.upper()).exists():
+            raise serializers.ValidationError("Este nombre de usuario ya está registrado.")
+        return value
 
     def create(self, validated_data):
         # Extraemos los datos del atleta

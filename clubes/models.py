@@ -58,3 +58,7 @@ class ClubAtleta(models.Model):
             # Desactivar cualquier otra membresía activa
             ClubAtleta.objects.filter(atleta=self.atleta, activo=True).update(activo=False)
         super().save(*args, **kwargs)
+
+
+
+

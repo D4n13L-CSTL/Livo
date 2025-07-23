@@ -31,11 +31,16 @@ class RegistroClubSerializer(serializers.Serializer):
     direccion_club = serializers.CharField(required=False, allow_blank=True)
     
 
-    """def validate_email(self, value):
+    def validate_email(self, value):
         if Usuario.objects.filter(email=value).exists():
             raise serializers.ValidationError("Este email ya está registrado.")
-        return value"""
+        return value
     
+    
+    def validate_usuario_club(self, value):
+        if Usuario.objects.filter(username=value.upper()).exists():
+            raise serializers.ValidationError("Este nombre de usuario ya está registrado.")
+        return value
 
     def create(self, validated_data):
         # Extraemos los datos del club
@@ -84,9 +89,20 @@ class RegistroClubSerializer(serializers.Serializer):
 class VerAtletasRegister(serializers.ModelSerializer):
     
     nombre_atleta= serializers.ReadOnlyField(source='atleta.nombre')
+    correo_atleta  = serializers.ReadOnlyField(source='atleta.email')
+    categoria= serializers.ReadOnlyField(source='atleta.categoria')
+    telefono= serializers.ReadOnlyField(source='atleta.telefono')
+    foto_perfil = serializers.SerializerMethodField()
     class Meta:
         model = ClubAtleta
-        fields = ['id','nombre_atleta']
+        fields = ['id','nombre_atleta' , 'correo_atleta', 'categoria', 'telefono', 'foto_perfil']
 
+    def get_foto_perfil(self, obj):
+        request = self.context.get('request')
+        foto = obj.atleta.foto_perfil
+        if foto and hasattr(foto, 'url'):
+            # Si quieres retornar URL absoluta
+            return request.build_absolute_uri(foto.url) if request else foto.url
+        return None
 #COMENZANDO SERIALIZADOR PARA DATOS DE ESTUDIANTES DEL CLUB
 

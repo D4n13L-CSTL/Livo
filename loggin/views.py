@@ -18,10 +18,9 @@ class CustomLoginView(TokenObtainPairView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except Exception as e:
-            return Response({"detail": "Credenciales inválidas"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+        serializer.is_valid(raise_exception=True)
+  
 
         access_token = serializer.validated_data['access']
         refresh_token = serializer.validated_data['refresh']
